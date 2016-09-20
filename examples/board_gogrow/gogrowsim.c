@@ -172,7 +172,7 @@ main(
 	/* These are bidirectional too */
 	for (int i = 0; i < 4; i++) {
 		avr_irq_t * iavr = avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('B'), i+2);
-		avr_irq_t * ilcd = hd44780.irq + IRQ_HD44780_D7 - i;
+		avr_irq_t * ilcd = hd44780.irq + IRQ_HD44780_D4 + i;
 		// AVR -> LCD
 		avr_connect_irq(iavr, ilcd);
 		// LCD -> AVR
