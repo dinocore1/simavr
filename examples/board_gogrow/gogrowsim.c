@@ -171,7 +171,7 @@ main(
 	/* Connect Data Lines to Port B, 2-6 */
 	/* These are bidirectional too */
 	for (int i = 0; i < 4; i++) {
-		avr_irq_t * iavr = avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('B'), i+2);
+		avr_irq_t * iavr = avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('D'), i+2);
 		avr_irq_t * ilcd = hd44780.irq + IRQ_HD44780_D4 + i;
 		// AVR -> LCD
 		avr_connect_irq(iavr, ilcd);
@@ -179,10 +179,10 @@ main(
 		avr_connect_irq(ilcd, iavr);
 	}
 	avr_connect_irq(
-			avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('B'), 1),
+			avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('D'), 1),
 			hd44780.irq + IRQ_HD44780_RS);
 	avr_connect_irq(
-			avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('B'), 0),
+			avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('D'), 0),
 			hd44780.irq + IRQ_HD44780_E);
 
 	//avr_connect_irq(
@@ -192,13 +192,13 @@ main(
 
 	avr_vcd_init(avr, "gtkwave_output.vcd", &vcd_file, 10 /* usec */);
 	avr_vcd_add_signal(&vcd_file,
-			avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('B'), IOPORT_IRQ_PIN_ALL),
+			avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('D'), IOPORT_IRQ_PIN_ALL),
 			4 /* bits */, "D4-D7");
 	avr_vcd_add_signal(&vcd_file,
-			avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('B'), 1),
+			avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('D'), 1),
 			1 /* bits */, "RS");
 	avr_vcd_add_signal(&vcd_file,
-			avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('B'), 0),
+			avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('D'), 0),
 			1 /* bits */, "E");
 	//avr_vcd_add_signal(&vcd_file,
 	//		avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('B'), 6),
