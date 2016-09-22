@@ -40,6 +40,8 @@
 #include "ac_input.h"
 #include "hd44780_glut.h"
 
+#include "rotory_encoder.h"
+
 
 //float pixsize = 16;
 int window;
@@ -48,6 +50,7 @@ avr_t * avr = NULL;
 avr_vcd_t vcd_file;
 ac_input_t ac_input;
 hd44780_t hd44780;
+rotory_encoder_t rotory_encoder;
 
 int color = 0;
 uint32_t colors[][4] = {
@@ -189,6 +192,12 @@ main(
 	//		avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('B'), 6),
 	//		hd44780.irq + IRQ_HD44780_RW);
 
+	rotory_encoder_init(avr, &rotory_encoder);
+	avr_connect_irq(rotory_encoder.irq + IRQ_ROTORY_ENCODER_A,
+		avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('C'), 0));
+	avr_connect_irq(rotory_encoder.irq + IRQ_ROTORY_ENCODER_B,
+		avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('C'), 1));
+
 
 	avr_vcd_init(avr, "gtkwave_output.vcd", &vcd_file, 10 /* usec */);
 	avr_vcd_add_signal(&vcd_file,
@@ -215,6 +224,10 @@ main(
 	avr_vcd_add_signal(&vcd_file,
 			hd44780.irq + IRQ_HD44780_DATA_OUT,
 			8 /* bits */, "LCD_DATA_OUT");
+
+	avr_vcd_add_signal(&vcd_file,
+			rotory_encoder.irq + IRQ_ROTORY_ENCODER_A,
+			2 /* bits */, "ROTORY_ENCODER");
 
 	avr_vcd_add_signal(&vcd_file, ac_input.irq + IRQ_AC_OUT, 1, "ac_input");
 
