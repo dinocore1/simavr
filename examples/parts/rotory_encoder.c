@@ -26,7 +26,8 @@ rotory_encoder_init(
 {
   e->irq = avr_alloc_irq(&avr->irq_pool, 0, 3, irq_names);
   e->avr = avr;
-  e->state = state_table[0];
+  e->state = 0;
+  avr_raise_irq(e->irq, state_table[e->state]);
 }
 
 
@@ -60,7 +61,8 @@ rotory_encoder_turn_cw(
   //uint8_t newState = (e->state+1) % 4;
 
   e->state = (e->state+1) % 4;
-  avr_raise_irq(e->irq, state_table[e->state]);
+  avr_raise_irq(e->irq + IRQ_ROTORY_ENCODER_A , 1 & (state_table[e->state] >> 1));
+  avr_raise_irq(e->irq + IRQ_ROTORY_ENCODER_B , 1 & (state_table[e->state] >> 0));
 }
 
 void
@@ -70,6 +72,12 @@ rotory_encoder_turn_ccw(
   //uint8_t oldState = e->state;
   //uint8_t newState = (e->state+1) % 4;
 
-  e->state = (e->state-1) % 4;
-  avr_raise_irq(e->irq, state_table[e->state]);
+  if(e->state <= 0) {
+    e->state = 3;
+  } else {
+    e->state -= 1;
+  }
+
+  avr_raise_irq(e->irq + IRQ_ROTORY_ENCODER_A , 1 & (state_table[e->state] >> 1));
+  avr_raise_irq(e->irq + IRQ_ROTORY_ENCODER_B , 1 & (state_table[e->state] >> 0));
 }

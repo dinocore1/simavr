@@ -84,6 +84,20 @@ void keyCB(
 			printf("Stopping VCD trace\n");
 			avr_vcd_stop(&vcd_file);
 			break;
+
+		case 46:
+			printf("rotory encoder cw\n");
+			rotory_encoder_turn_cw(&rotory_encoder);
+			break;
+
+		case 44:
+			printf("rotory encoder ccw\n");
+			rotory_encoder_turn_ccw(&rotory_encoder);
+			break;
+
+		default:
+			printf("key pressed: %d\n", key);
+
 	}
 }
 
