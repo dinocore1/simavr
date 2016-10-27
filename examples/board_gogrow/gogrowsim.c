@@ -41,6 +41,7 @@
 #include "hd44780_glut.h"
 
 #include "rotory_encoder.h"
+#include "button.h"
 
 
 //float pixsize = 16;
@@ -51,6 +52,7 @@ avr_vcd_t vcd_file;
 ac_input_t ac_input;
 hd44780_t hd44780;
 rotory_encoder_t rotory_encoder;
+button_t select_button;
 
 int color = 0;
 uint32_t colors[][4] = {
@@ -93,6 +95,11 @@ void keyCB(
 		case 44:
 			printf("rotory encoder ccw\n");
 			rotory_encoder_turn_ccw(&rotory_encoder);
+			break;
+
+		case ' ':
+			printf("select button pressed\n");
+			button_press(&select_button, 10000);
 			break;
 
 		default:
@@ -212,6 +219,9 @@ main(
 	avr_connect_irq(rotory_encoder.irq + IRQ_ROTORY_ENCODER_B,
 		avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('C'), 1));
 
+	button_init(avr, &select_button, "select button");
+	avr_connect_irq(select_button.irq + IRQ_BUTTON_OUT,
+		avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ('C'), 2));
 
 	avr_vcd_init(avr, "gtkwave_output.vcd", &vcd_file, 10 /* usec */);
 	avr_vcd_add_signal(&vcd_file,
@@ -242,6 +252,10 @@ main(
 	avr_vcd_add_signal(&vcd_file,
 			rotory_encoder.irq + IRQ_ROTORY_ENCODER_A,
 			2 /* bits */, "ROTORY_ENCODER");
+
+	avr_vcd_add_signal(&vcd_file,
+			select_button.irq + IRQ_BUTTON_OUT,
+			1 /* bits */, "SELECT_BUTTON");
 
 	avr_vcd_add_signal(&vcd_file, ac_input.irq + IRQ_AC_OUT, 1, "ac_input");
 

@@ -41,6 +41,7 @@ ${board} : ${OBJ}/ac_input.o
 ${board} : ${OBJ}/hd44780.o
 ${board} : ${OBJ}/hd44780_glut.o
 ${board} : ${OBJ}/rotory_encoder.o
+${board} : ${OBJ}/button.o
 ${board} : ${OBJ}/${target}.o
 
 ${target}: ${board}
